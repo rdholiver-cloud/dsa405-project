@@ -24,7 +24,7 @@ Field definitions were cross-checked against Nasdaq’s [Symbol Directory Defini
 
 ```bash
 python3 -m pip install -r requirements.txt
-jupyter notebook DSA405_002_FA26_P2_UNITY_ID.ipynb
+jupyter notebook DSA405_002_FA26_P2_rdhoover.ipynb
 ```
 
 3. Restart the kernel and run all cells top to bottom.
@@ -56,13 +56,9 @@ Ticker `NA` (Nano Labs) is a real symbol. Load processed CSVs the same way the n
 pd.read_csv("data/processed/nasdaq_symbol_directory_clean.csv", dtype="string", keep_default_na=False)
 ```
 
-## TODO before Moodle submit (Riley)
+## Unity ID
 
-The notebook filename uses a **placeholder** Unity ID:
-
-`DSA405_002_FA26_P2_UNITY_ID.ipynb`
-
-**Riley: replace `UNITY_ID` with your real NC State Unity ID in the filename before submitting to Moodle.** Do not invent one in git. Also paste the repo link on Moodle as required by the P2 handout. This agent will not submit to Moodle.
+Notebook filename uses Riley’s Unity ID: `DSA405_002_FA26_P2_rdhoover.ipynb`. Paste the repo link on Moodle as required by the P2 handout. This agent will not submit to Moodle.
 
 ## What this milestone is not
 

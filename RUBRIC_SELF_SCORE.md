@@ -8,7 +8,7 @@ Course rubric weights from the P2 handout. This is an ungraded copy for submissi
 | Cleaning execution | ×2 | 4 | 8 | Repair over drop: ticker `NA` recovered, whitespace fixed, types cast, codes decoded. Only the non-security trailer row is removed from the full table. Test issues and the one non-traded name are kept in the full clean file and omitted only from the analysis extract. Raw file is never overwritten. |
 | Cleaning log | ×3 | 4 | 12 | 18 decision rows with column, change, rows/cells affected, why (not a restatement), and what is lost. Reversible from this log plus `data/raw/nasdaqtraded.txt`. |
 | Provenance | ×1 | 4 | 4 | ≤200 words, plain language, source / timestamp / what was not collected. |
-| Tidy / reproducible | ×2 | 4 | 8 | Kernel restart, top-to-bottom run, pinned `requirements.txt`, raw vs processed split, README with Unity ID TODO. |
+| Tidy / reproducible | ×2 | 4 | 8 | Kernel restart, top-to-bottom run, pinned `requirements.txt`, raw vs processed split, notebook named `DSA405_002_FA26_P2_rdhoover.ipynb`. |
 | **Total** | | | **40 / 40** | Cap at the handout’s 4-point feel per criterion. Riley should re-score after reading the notebook cold. |
 
 ## Defect classes
