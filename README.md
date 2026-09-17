@@ -50,6 +50,12 @@ That script is the only HTTP fetch. It sends an identifying educational user-age
 | `data/processed/row_column_accounting.csv` | Before/after row and column counts |
 | `data/processed/file_metadata.json` | Source URL, raw sha256, file-creation timestamp |
 
+Ticker `NA` (Nano Labs) is a real symbol. Load processed CSVs the same way the notebook loads the raw file, or pandas will turn those letters into missing values:
+
+```python
+pd.read_csv("data/processed/nasdaq_symbol_directory_clean.csv", dtype="string", keep_default_na=False)
+```
+
 ## TODO before Moodle submit (Riley)
 
 The notebook filename uses a **placeholder** Unity ID:

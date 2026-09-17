@@ -1,0 +1,19 @@
+{
+  "source_url": "https://www.nasdaqtrader.com/dynamic/symdir/nasdaqtraded.txt",
+  "docs_url": "https://www.nasdaqtrader.com/trader.aspx?id=symboldirdefs",
+  "raw_path": "data/raw/nasdaqtraded.txt",
+  "raw_sha256": "61eaccdf817442beaceada8ce5fc0a84f8c4db865564d8a474e7dea9189318d0",
+  "raw_bytes": 1000112,
+  "file_creation_time_token": "File Creation Time: 0917202614:03",
+  "snapshot_at": "2026-09-17 14:03",
+  "snapshot_timezone_note": "Timezone is not labeled in the trailer; Nasdaq Trader operates on Eastern Time.",
+  "n_securities_clean": 13253,
+  "n_securities_analysis": 13215,
+  "user_agent_for_optional_refetch": "DSA405-002-FA26-NCSU-student/1.0 (educational non-commercial class project; Riley Hoover; rdh.oliver@gmail.com)",
+  "p3_deferred": [
+    "yfinance",
+    "price history",
+    "joins",
+    "backtest"
+  ]
+}

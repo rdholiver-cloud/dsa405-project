@@ -1,0 +1,7 @@
+stage,rows,columns,notes
+0. Physical file lines in data/raw/nasdaqtraded.txt,13255,,Unmodified bytes. Header + securities + trailer. Code does not write here.
+"1. Loaded as a table (Load B, including trailer)",13254,12.0,pandas rows = file lines minus the header. 12 Nasdaq columns.
+2. After dropping the File Creation Time trailer,13253,12.0,1 row removed. 12 columns still. Timestamp parsed for stage 3.
+3. After sentinel/type/name repairs (no row drop),13253,12.0,"Decisions 4–13 change cells and dtypes, not row or column counts."
+4. Full cleaned table (derived columns + rename),13253,16.0,"Added snapshot_at, listing_exchange_name, market_category_name, financial_status_name (12+4=16)."
+5. Analysis extract (nasdaq_traded and not test),13215,16.0,Omitted 37 test + 1 not-traded from this file only.
