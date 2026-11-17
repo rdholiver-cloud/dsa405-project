@@ -65,7 +65,7 @@ The run takes about 30 seconds and writes `figures/`, `results/findings.csv` and
 | `results/findings.csv` | Every headline number the report cites, with uncertainty figures |
 | `figures/` | `growth_baseline.png`, `growth_sensitivity.png`, `subperiod_cagr.png` |
 | `logs/p4_nbconvert_run.log` | Log of the recorded clean run |
-| `RUBRIC_SELF_SCORE.md` | The P2 self-score, kept for history |
+| `RUBRIC_SELF_SCORE.md` | The P4 self-scored rubric. The earlier P2 version is in git history |
 | `requirements.txt` | Pinned packages |
 
 ## Known limits
