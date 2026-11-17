@@ -1,68 +1,77 @@
-# DSA 405 P2 — Nasdaq Symbol Directory audit and clean
+# DSA 405 P4: does a Nasdaq momentum rule beat the S&P 500?
 
-Course: **DSA 405-002 Data Wrangling and Web Scraping**, NC State, Fall 2026 (Prof. Jonathan Holt).
+Course: DSA 405-002 Data Wrangling and Web Scraping, NC State, Fall 2026 (Prof. Jonathan Holt). Author: Riley Hoover (rdhoover), solo project, Tier 1, no stretch component.
 
-This repository is the P2 milestone of a larger question from P1: *does a monthly top-10 momentum strategy built from Nasdaq’s 100 highest-volume names beat buy-and-hold on the S&P 500 over ~30 years?*
+## What the project is and what it found
 
-**P2 uses only one source:** the Nasdaq Symbol Directory. Price history, yfinance, joins, and backtests are deferred to **P3**.
+The question has stayed the same since P1: does a monthly top-10 momentum strategy, picked from Nasdaq's 100 highest-volume names, beat buy-and-hold on the S&P 500 (SPY) over about 30 years? The Nasdaq Symbol Directory has no volume column, so the project pulled Yahoo Finance price history for 1,036 Nasdaq Global Select common stocks plus SPY, ranks stocks each month by average daily dollar volume, keeps the top 100, and buys the 10 with the best 12-month return. P4 reruns that analysis from the saved raw data and adds checks on how much the answer can be trusted.
 
-## Data origin
+On the headline run (February 1997 to September 2026, 356 months, no trading costs), $1 grew to $736.22 for the rule (24.9% a year) and to $16.18 for SPY (9.8% a year). The rule beat SPY in 60.1% of months, and its returns were far more volatile (36.7% a year against 15.3%). A paired bootstrap of the yearly growth gap gave a 5th to 95th percentile range of +4.2 to +26.4 percentage points, and the rule came out ahead in 99.0% of resamples. That interval treats months as independent, so it is rough. The result is also flattered by survivorship: the stock list is today's Nasdaq directory, so firms that were delisted along the way are missing. Treat the gap as an upper bound on what a real investor would have earned. All numbers are in `results/findings.csv`.
 
-- Publisher: Nasdaq, Inc. (Nasdaq Trader)
-- File: Nasdaq Symbol Directory (`nasdaqtraded.txt`)
-- URL: https://www.nasdaqtrader.com/dynamic/symdir/nasdaqtraded.txt
-- Format: pipe-separated text (`sep="|"`)
-- License / use: Nasdaq states the data is for internal non-commercial use unless separately licensed. This repo is an educational class project.
-- Snapshot in `data/raw/nasdaqtraded.txt` is unmodified. The last line of the file is a Nasdaq “File Creation Time” stamp (this copy: `0917202614:03` → 2026-09-17 14:03 as printed).
+Other checks: 21 monthly returns were flagged as implausible (above +300%), including CHRD in November 2020 at about +30,991%, whose cause is not established. None of the 21 sat inside a held portfolio when it was earned, so the headline is unchanged by dropping CHRD alone. Removing all 21 jumps raised the rule's final wealth to $822.40, and capping them at +300% gave $764.30. We suspect, but did not test, that the jumps inflated 12-month momentum and pulled the rule into names that then gave the gains back. Six tickers (INDV, MGPI, NATH, QRVO, SLP, WBD) could not be parsed from the cache and are missing from the price table.
 
-Field definitions were cross-checked against Nasdaq’s [Symbol Directory Definitions](https://www.nasdaqtrader.com/trader.aspx?id=symboldirdefs). That page documents `nasdaqlisted.txt` and `otherlisted.txt`, not `nasdaqtraded.txt` itself. The combined file’s extra columns and extra exchange codes are treated as documentation gaps in the notebook.
+## Data sources, links and licenses
+
+| Source | Producer and link | Terms |
+| --- | --- | --- |
+| Nasdaq Symbol Directory, `nasdaqtraded.txt` | Nasdaq, Inc. (Nasdaq Trader). File: https://www.nasdaqtrader.com/dynamic/symdir/nasdaqtraded.txt. Field definitions: https://www.nasdaqtrader.com/Trader.aspx?id=symboldirdefs | Nasdaq states the data is for internal, non-commercial use unless separately licensed. This repo is an educational class project and holds one unmodified snapshot (file creation stamp 2026-09-17 14:03, sha256 `61eaccdf817442beaceada8ce5fc0a84f8c4db865564d8a474e7dea9189318d0`). |
+| Yahoo Finance daily chart data | Yahoo. Endpoint: https://query1.finance.yahoo.com/v8/finance/chart/{TICKER}. Terms: https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html | There is no open data license. Yahoo's terms restrict automated collection without permission. The pull (P3, finished 2026-11-05) was approved by the student for this class project only. That is not express permission from Yahoo. Do not reuse the cache commercially or redistribute it publicly. |
+
+The Yahoo responses are kept as a cache zip outside git (see below). P4 never contacts Yahoo.
 
 ## How to run
 
-1. Use Python 3.10+ (developed on 3.12).
-2. From the repo root:
+1. Use Python 3.13 (the recorded run used 3.13.5). Python 3.11 or later should work but is untested.
+2. Clone the repo and check out the `p4-synthesis` branch.
+3. Create an environment and install the pinned packages:
 
 ```bash
-python3 -m pip install -r requirements.txt
-jupyter notebook DSA405_002_FA26_P2_rdhoover.ipynb
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-3. Restart the kernel and run all cells top to bottom.
-
-The notebook **reads** `data/raw/nasdaqtraded.txt` and **writes only** under `data/processed/`. It will refuse to start if the raw file is missing. It never writes into `data/raw/`.
-
-If you need a fresh Nasdaq snapshot (not required for grading this copy):
+4. Get the Yahoo cache. It is about 87 MB zipped and 502 MB unzipped, so it is not in git. The zip is `DSA405_P3_yahoo_cache_2026-11-05.zip` (sha256 `656dff59e9feb7d108bfe5fca87a95648e91ca9d6fa27b73df6555c0c9ec5c7f`). Put it in `data/raw/` or pass its path:
 
 ```bash
-python3 scripts/fetch_nasdaqtraded.py --force
+python scripts/get_data.py                       # tries the class Google Drive link, then stops with instructions
+python scripts/get_data.py --zip /path/to/DSA405_P3_yahoo_cache_2026-11-05.zip
 ```
 
-That script is the only HTTP fetch. It sends an identifying educational user-agent. Do not point any cleaning code at `data/raw/`.
+The script checks the Nasdaq file hash, checks the committed manifest (`data/raw/DSA405_P3_yahoo-cache-manifest.json.gz`, 2,076 files with sizes and sha256), verifies the zip hash, extracts into `data/raw/yahoo/`, and verifies every extracted file. The Drive file may not be publicly shared. If the download fails, the script says so and you need a copy of the zip from the author. The script never changes Drive sharing and never contacts Yahoo.
 
-## Outputs
+5. Run the notebook from a clean kernel:
+
+```bash
+jupyter nbconvert --to notebook --execute --output DSA405_002_FA26_P4_rdhoover.executed.ipynb DSA405_002_FA26_P4_rdhoover.ipynb
+```
+
+The run takes about 30 seconds and writes `figures/`, `results/findings.csv` and `data/processed/`. The notebook calls `scripts/get_data.py` itself, so step 4 can also be skipped if the zip is already in `data/raw/`. The recorded run is saved in `logs/p4_nbconvert_run.log`, and the executed notebook with all outputs is committed.
+
+## Repo structure
 
 | Path | What it is |
 | --- | --- |
-| `data/raw/nasdaqtraded.txt` | Unmodified Nasdaq pull |
-| `data/processed/nasdaq_symbol_directory_clean.csv` | All real securities, types repaired, names trimmed, codes decoded |
-| `data/processed/nasdaq_symbol_directory_analysis.csv` | Analysis universe: Nasdaq-traded and not a test issue |
-| `data/processed/cleaning_log.csv` | The 10–20 cleaning decisions with counts |
-| `data/processed/row_column_accounting.csv` | Before/after row and column counts |
-| `data/processed/file_metadata.json` | Source URL, raw sha256, file-creation timestamp |
+| `DSA405_002_FA26_P4_rdhoover.ipynb` | Main P4 notebook: raw files to joined table, backtest, sensitivity checks, bootstrap, findings and figures |
+| `DSA405_002_FA26_P4_rdhoover.executed.ipynb` | The same notebook after a clean nbconvert run, with outputs |
+| `DSA405_002_FA26_P2_rdhoover.ipynb` | P2 audit and cleaning of the Nasdaq file, kept as the cleaning provenance |
+| `scripts/get_data.py` | Hash-checked data restore (Nasdaq file, Yahoo cache zip, manifest) |
+| `scripts/fetch_nasdaqtraded.py` | P2 script that downloaded the Nasdaq snapshot. Not needed to reproduce |
+| `data/raw/nasdaqtraded.txt` | Unmodified Nasdaq snapshot |
+| `data/raw/DSA405_P3_yahoo-cache-manifest.json.gz` | Expected size and sha256 of every cached Yahoo file |
+| `data/raw/yahoo/` | Restored Yahoo cache. Not in git |
+| `data/processed/` | P2 clean tables and cleaning log, plus P4 outputs: `directory.csv`, `backtest_full.csv`, `flagged_monthly_returns.csv`, `fetch_failures.csv`. The large `prices_daily.csv`, `prices_monthly.csv` and `joined_monthly.csv` are rebuilt by the notebook and not in git |
+| `docs/data_dictionary.md`, `docs/cleaning_log.csv` | Data dictionary and cleaning log, updated to the final data |
+| `results/findings.csv` | Every headline number the report cites, with uncertainty figures |
+| `figures/` | `growth_baseline.png`, `growth_sensitivity.png`, `subperiod_cagr.png` |
+| `logs/p4_nbconvert_run.log` | Log of the recorded clean run |
+| `RUBRIC_SELF_SCORE.md` | The P2 self-score, kept for history |
+| `requirements.txt` | Pinned packages |
 
-Ticker `NA` (Nano Labs) is a real symbol. Load processed CSVs the same way the notebook loads the raw file, or pandas will turn those letters into missing values:
+## Known limits
 
-```python
-pd.read_csv("data/processed/nasdaq_symbol_directory_clean.csv", dtype="string", keep_default_na=False)
-```
-
-## Unity ID
-
-Notebook filename uses Riley’s Unity ID: `DSA405_002_FA26_P2_rdhoover.ipynb`. Paste the repo link on Moodle as required by the P2 handout. This agent will not submit to Moodle.
-
-## What this milestone is not
-
-- Not a yfinance pull
-- Not a price join
-- Not a backtest
-- Not a Moodle submission
+- Survivorship: only stocks in the 2026-09-17 directory are included.
+- Six tickers failed to parse and 21 returns look implausible. Both are reported, not hidden.
+- No trading costs, taxes or slippage. The rule trades 10 names a month.
+- The bootstrap treats months as independent, which they are not.
+- The dollar-volume ranking uses Yahoo's split-adjusted close and volume.
