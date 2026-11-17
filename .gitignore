@@ -5,3 +5,28 @@ venv/
 .env
 *.pyc
 .DS_Store
+
+# Virtual environments and secrets
+.env.*
+*.pem
+id_rsa
+id_rsa.pub
+
+# Yahoo cache is too large for git (zip is ~87 MB; uncompressed is ~502 MB).
+# Restore it with: python scripts/get_data.py
+data/raw/yahoo/
+data/raw/DSA405_P3_yahoo_cache_2026-11-05.zip
+data/raw/*.zip
+data/raw/*.zip.download.tmp
+data/raw/*.bootstrap.tmp
+
+# Daily price table is ~289 MB and is rebuilt from the cache by the notebook.
+data/processed/prices_daily.csv
+
+# Local notebook checkpoints and execute leftovers
+*.executed.ipynb.bak
+.jupyter/
+
+# Large intermediates rebuilt by the P4 notebook (31 MB and 20 MB).
+data/processed/joined_monthly.csv
+data/processed/prices_monthly.csv
