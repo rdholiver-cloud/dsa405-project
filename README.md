@@ -38,7 +38,7 @@ python scripts/get_data.py                       # tries the class Google Drive 
 python scripts/get_data.py --zip /path/to/DSA405_P3_yahoo_cache_2026-11-05.zip
 ```
 
-The script checks the Nasdaq file hash, checks the committed manifest (`data/raw/DSA405_P3_yahoo-cache-manifest.json.gz`, 2,076 files with sizes and sha256), checks the zip hash, unzips into `data/raw/yahoo/`, and checks every unzipped file. The Drive file may not be publicly shared. If the download fails, the script says so and you need a copy of the zip from the author. The script never changes Drive sharing and never contacts Yahoo.
+The script checks the Nasdaq file hash, checks the committed manifest (`data/raw/DSA405_P3_yahoo-cache-manifest.json.gz`, 2,076 files with sizes and sha256), checks the zip hash, unzips into `data/raw/yahoo/`, and checks every unzipped file. The Drive file is shared so anyone with the link can download it. If the download fails anyway, the script says so, and you can pass a local copy of the zip with `--zip <path>`. The script never changes Drive sharing and never contacts Yahoo.
 
 5. Run the notebook from a clean kernel:
 
