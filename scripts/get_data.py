@@ -41,7 +41,7 @@ CACHE_ZIP_NAME = "DSA405_P3_yahoo_cache_2026-11-05.zip"
 CACHE_ZIP = RAW / CACHE_ZIP_NAME
 CACHE_ZIP_SHA256 = "656dff59e9feb7d108bfe5fca87a95648e91ca9d6fa27b73df6555c0c9ec5c7f"
 CACHE_DRIVE_ID = "1V8y-qF7jM2aOFJIyZxxBLP0QUMa5VuDN"
-CACHE_DRIVE_URL = f"https://drive.google.com/uc?export=download&id={CACHE_DRIVE_ID}&confirm=t"
+CACHE_DRIVE_URL = f"https://drive.usercontent.google.com/download?id={CACHE_DRIVE_ID}&export=download&confirm=t"
 
 MANIFEST_PATH = RAW / "DSA405_P3_yahoo-cache-manifest.json.gz"
 MANIFEST_SHA256 = "848703115237a4b08bc31fe8e1b71377f04f7149d03192ca3c4adac34af678ef"
