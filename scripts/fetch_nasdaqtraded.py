@@ -22,7 +22,7 @@ SOURCE_URL = "https://www.nasdaqtrader.com/dynamic/symdir/nasdaqtraded.txt"
 USER_AGENT = (
     "DSA405-002-FA26-NCSU-student/1.0 "
     "(educational non-commercial class project; "
-    "Riley Hoover; rdh.oliver@gmail.com)"
+    "NC State DSA 405 student project)"
 )
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RAW_PATH = REPO_ROOT / "data" / "raw" / "nasdaqtraded.txt"

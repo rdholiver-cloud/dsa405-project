@@ -49,7 +49,7 @@ MANIFEST_SHA256 = "848703115237a4b08bc31fe8e1b71377f04f7149d03192ca3c4adac34af67
 USER_AGENT = (
     "DSA405-002-FA26-NCSU-student/1.0 "
     "(educational non-commercial class project; "
-    "Riley Hoover; rdh.oliver@gmail.com)"
+    "NC State DSA 405 student project)"
 )
 
 
