@@ -1,0 +1,90 @@
+metric,scenario,value,unit,note
+n_planned_tickers,inputs,1037,count,Global Select common-stock pool plus SPY
+n_parsed_tickers,inputs,1031,count,Tickers successfully parsed from the Yahoo cache
+n_skipped_tickers,inputs,6,count,"INDV, MGPI, NATH, QRVO, SLP, WBD (missing timestamp path)"
+n_daily_rows,inputs,4855550,count,Usable ticker-day rows after dropping null price or volume days
+n_joined_rows,inputs,231997,count,Left-join output rows; should match the monthly price row count
+n_unmatched_price_rows,inputs,0,count,Price rows with no directory match
+n_flagged_monthly_returns,inputs,21,count,"Headline table rows with ret outside (-100%, +300%]; all retained"
+chrd_2020_11_return,inputs,309.909076444,decimal,CHRD November 2020 monthly return (decimal). Cause not established.
+live_yahoo_requests,inputs,0,count,Must be zero in this P4 run
+verify_failures_real,inputs,"21 monthly return(s) outside (-100%, +300%]",text,verify() messages on the headline joined table
+verify_failures_mutated_count,inputs,8,count,"Failure messages on the deliberately broken copy, including the real range flag"
+bootstrap_seed,uncertainty,4052026,integer,numpy Generator seed for the monthly-return bootstrap
+bootstrap_reps,uncertainty,2000,count,Resamples with replacement; months treated as independent
+n_months,baseline,356,months,Holding months from 1997-02 to 2026-09
+first_month,baseline,1997-02,yyyy-mm,First month whose return is earned
+last_month,baseline,2026-09,yyyy-mm,Last month whose return is earned
+final_wealth_strategy,baseline,736.215803012,dollars_per_1,"Growth of $1 in the equal-weight momentum rule, no costs"
+final_wealth_spy,baseline,16.1789247607,dollars_per_1,Growth of $1 in SPY buy-and-hold over the same months
+cagr_strategy,baseline,0.24922487234,decimal_per_year,Compound annual growth rate of the strategy
+cagr_spy,baseline,0.098376195175,decimal_per_year,Compound annual growth rate of SPY
+share_months_strategy_beats_spy,baseline,0.601123595506,share_of_months,Share of holding months with strategy_ret > spy_ret
+ann_vol_strategy,baseline,0.367067233093,decimal_per_year,Sample standard deviation of monthly strategy returns times sqrt(12)
+ann_vol_spy,baseline,0.152984721498,decimal_per_year,Sample standard deviation of monthly SPY returns times sqrt(12)
+n_months,exclude_flagged,356,months,Holding months from 1997-02 to 2026-09
+first_month,exclude_flagged,1997-02,yyyy-mm,First month whose return is earned
+last_month,exclude_flagged,2026-09,yyyy-mm,Last month whose return is earned
+final_wealth_strategy,exclude_flagged,822.400708312,dollars_per_1,"Growth of $1 in the equal-weight momentum rule, no costs"
+final_wealth_spy,exclude_flagged,16.1789247607,dollars_per_1,Growth of $1 in SPY buy-and-hold over the same months
+cagr_strategy,exclude_flagged,0.253895202543,decimal_per_year,Compound annual growth rate of the strategy
+cagr_spy,exclude_flagged,0.098376195175,decimal_per_year,Compound annual growth rate of SPY
+share_months_strategy_beats_spy,exclude_flagged,0.601123595506,share_of_months,Share of holding months with strategy_ret > spy_ret
+ann_vol_strategy,exclude_flagged,0.366152371929,decimal_per_year,Sample standard deviation of monthly strategy returns times sqrt(12)
+ann_vol_spy,exclude_flagged,0.152984721498,decimal_per_year,Sample standard deviation of monthly SPY returns times sqrt(12)
+n_months,cap_300,356,months,Holding months from 1997-02 to 2026-09
+first_month,cap_300,1997-02,yyyy-mm,First month whose return is earned
+last_month,cap_300,2026-09,yyyy-mm,Last month whose return is earned
+final_wealth_strategy,cap_300,764.299567959,dollars_per_1,"Growth of $1 in the equal-weight momentum rule, no costs"
+final_wealth_spy,cap_300,16.1789247607,dollars_per_1,Growth of $1 in SPY buy-and-hold over the same months
+cagr_strategy,cap_300,0.250802271165,decimal_per_year,Compound annual growth rate of the strategy
+cagr_spy,cap_300,0.098376195175,decimal_per_year,Compound annual growth rate of SPY
+share_months_strategy_beats_spy,cap_300,0.601123595506,share_of_months,Share of holding months with strategy_ret > spy_ret
+ann_vol_strategy,cap_300,0.366320529779,decimal_per_year,Sample standard deviation of monthly strategy returns times sqrt(12)
+ann_vol_spy,cap_300,0.152984721498,decimal_per_year,Sample standard deviation of monthly SPY returns times sqrt(12)
+n_months,exclude_chrd_2020_11,356,months,Holding months from 1997-02 to 2026-09
+first_month,exclude_chrd_2020_11,1997-02,yyyy-mm,First month whose return is earned
+last_month,exclude_chrd_2020_11,2026-09,yyyy-mm,Last month whose return is earned
+final_wealth_strategy,exclude_chrd_2020_11,736.215803012,dollars_per_1,"Growth of $1 in the equal-weight momentum rule, no costs"
+final_wealth_spy,exclude_chrd_2020_11,16.1789247607,dollars_per_1,Growth of $1 in SPY buy-and-hold over the same months
+cagr_strategy,exclude_chrd_2020_11,0.24922487234,decimal_per_year,Compound annual growth rate of the strategy
+cagr_spy,exclude_chrd_2020_11,0.098376195175,decimal_per_year,Compound annual growth rate of SPY
+share_months_strategy_beats_spy,exclude_chrd_2020_11,0.601123595506,share_of_months,Share of holding months with strategy_ret > spy_ret
+ann_vol_strategy,exclude_chrd_2020_11,0.367067233093,decimal_per_year,Sample standard deviation of monthly strategy returns times sqrt(12)
+ann_vol_spy,exclude_chrd_2020_11,0.152984721498,decimal_per_year,Sample standard deviation of monthly SPY returns times sqrt(12)
+final_wealth_strategy_p05,bootstrap_baseline,25.670473688,dollars_per_1,5th percentile of the independent-month bootstrap on the baseline series
+final_wealth_strategy_p95,bootstrap_baseline,16151.1911479,dollars_per_1,95th percentile of the independent-month bootstrap on the baseline series
+final_wealth_spy_p05,bootstrap_baseline,3.91471903059,dollars_per_1,5th percentile of the independent-month bootstrap on the baseline series
+final_wealth_spy_p95,bootstrap_baseline,63.3048634982,dollars_per_1,95th percentile of the independent-month bootstrap on the baseline series
+cagr_strategy_p05,bootstrap_baseline,0.115601288638,decimal_per_year,5th percentile of the independent-month bootstrap on the baseline series
+cagr_strategy_p95,bootstrap_baseline,0.386275559748,decimal_per_year,95th percentile of the independent-month bootstrap on the baseline series
+cagr_spy_p05,bootstrap_baseline,0.047077113322,decimal_per_year,5th percentile of the independent-month bootstrap on the baseline series
+cagr_spy_p95,bootstrap_baseline,0.1500655551,decimal_per_year,95th percentile of the independent-month bootstrap on the baseline series
+n_months,subperiod_1997-02_to_2006-12,119,months,Baseline months earned 1997-02 to 2006-12
+final_wealth_strategy,subperiod_1997-02_to_2006-12,4.41032816739,dollars_per_1,"Growth of $1 over this subperiod only, baseline path"
+final_wealth_spy,subperiod_1997-02_to_2006-12,2.09598610379,dollars_per_1,Growth of $1 in SPY over this subperiod only
+cagr_strategy,subperiod_1997-02_to_2006-12,0.161418294751,decimal_per_year,"Strategy CAGR over this subperiod, baseline path"
+cagr_spy,subperiod_1997-02_to_2006-12,0.0774792472082,decimal_per_year,SPY CAGR over this subperiod
+share_months_strategy_beats_spy,subperiod_1997-02_to_2006-12,0.546218487395,share_of_months,Share of months in this subperiod with strategy_ret > spy_ret
+ann_vol_strategy,subperiod_1997-02_to_2006-12,0.433597344515,decimal_per_year,Annualized volatility of the strategy in this subperiod
+ann_vol_spy,subperiod_1997-02_to_2006-12,0.152064948702,decimal_per_year,Annualized volatility of SPY in this subperiod
+n_months,subperiod_2007-01_to_2016-12,120,months,Baseline months earned 2007-01 to 2016-12
+final_wealth_strategy,subperiod_2007-01_to_2016-12,7.21474452218,dollars_per_1,"Growth of $1 over this subperiod only, baseline path"
+final_wealth_spy,subperiod_2007-01_to_2016-12,1.94352832885,dollars_per_1,Growth of $1 in SPY over this subperiod only
+cagr_strategy,subperiod_2007-01_to_2016-12,0.218490354576,decimal_per_year,"Strategy CAGR over this subperiod, baseline path"
+cagr_spy,subperiod_2007-01_to_2016-12,0.0687080667831,decimal_per_year,SPY CAGR over this subperiod
+share_months_strategy_beats_spy,subperiod_2007-01_to_2016-12,0.683333333333,share_of_months,Share of months in this subperiod with strategy_ret > spy_ret
+ann_vol_strategy,subperiod_2007-01_to_2016-12,0.234723413746,decimal_per_year,Annualized volatility of the strategy in this subperiod
+ann_vol_spy,subperiod_2007-01_to_2016-12,0.152509042735,decimal_per_year,Annualized volatility of SPY in this subperiod
+n_months,subperiod_2017-01_to_2026-09,117,months,Baseline months earned 2017-01 to 2026-09
+final_wealth_strategy,subperiod_2017-01_to_2026-09,23.1373316767,dollars_per_1,"Growth of $1 over this subperiod only, baseline path"
+final_wealth_spy,subperiod_2017-01_to_2026-09,3.97164461894,dollars_per_1,Growth of $1 in SPY over this subperiod only
+cagr_strategy,subperiod_2017-01_to_2026-09,0.380160412888,decimal_per_year,"Strategy CAGR over this subperiod, baseline path"
+cagr_spy,subperiod_2017-01_to_2026-09,0.151947958949,decimal_per_year,SPY CAGR over this subperiod
+share_months_strategy_beats_spy,subperiod_2017-01_to_2026-09,0.57264957265,share_of_months,Share of months in this subperiod with strategy_ret > spy_ret
+ann_vol_strategy,subperiod_2017-01_to_2026-09,0.40370163984,decimal_per_year,Annualized volatility of the strategy in this subperiod
+ann_vol_spy,subperiod_2017-01_to_2026-09,0.154753083623,decimal_per_year,Annualized volatility of SPY in this subperiod
+cagr_gap_paired_bootstrap_p05,bootstrap_baseline,0.0421162553051,decimal_per_year,"5th percentile of strategy CAGR minus SPY CAGR, paired month resampling"
+cagr_gap_paired_bootstrap_p95,bootstrap_baseline,0.263843462847,decimal_per_year,"95th percentile of strategy CAGR minus SPY CAGR, paired month resampling"
+cagr_gap_share_resamples_positive,bootstrap_baseline,0.9895,share_of_resamples,Share of paired bootstrap resamples where strategy CAGR is above SPY CAGR
+n_flagged_jumps_held_in_portfolio,inputs,0,count,Flagged jumps that were inside the held top-10 portfolio in the month earned

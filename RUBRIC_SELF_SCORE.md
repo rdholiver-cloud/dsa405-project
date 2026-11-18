@@ -1,0 +1,21 @@
+**P4 ungraded self-score**
+
+Scores are an honest estimate for this submission, not a recorded grade. Criteria and weights are from `DSA405_ProjectRubrics_FA26.md`. The conversion is percentage = 88 + (weighted mean - 3) x 12, rounded to the nearest whole number. The declared tier is Tier 1, which caps Criterion 5 at 3. No stretch component is claimed. Scored on 2026-11-17 against the built repository, the executed notebook, and `results/findings.csv`.
+
+| # | Criterion | Wt | Self-score (1-4) | Weighted | Notes |
+| --- | --- | ---: | ---: | ---: | --- |
+| 1 | Findings and interpretation | x2 | 4 | 8 | The headline (rule $736.22, 24.9% a year, against SPY $16.18, 9.8% a year, over 356 months) is backed by checks that are in `results/findings.csv`: volatility (36.7% against 15.3%), a bootstrap with its independence caveat, three subperiods, and sensitivity runs for the 21 flagged returns ($822.40 removed, $764.30 capped, CHRD alone no change). The report says plainly what is shown, what is only suspected (why removing the jumps helps, the survivorship bias), and what is not measured (costs, delisted firms). |
+| 2 | Narrative coherence | x2 | 4 | 8 | One path from the question to the findings. The question stayed the same and the method changed, and Section 1 says so. Sections 4, 5, 6, and 7 point to each other, and the limits in Section 7 feed back into how Section 6 reads the headline. |
+| 3 | Who is missing | x2 | 4 | 8 | Names specific exclusions (firms later delisted, names outside Global Select common stock, six tickers that did not parse, 1,031 tickers of which only 316 reach back to January 1996), states what each does to the conclusion, and names one question the data cannot answer. |
+| 4 | AI use log and reflection | x2 | 2 | 4 | The P1 note on Claude Sonnet 5 is specific, but Section 8 still has blank placeholders for the P2 to P4 tools list and for a confirmed case of a model getting something wrong. Those can only come from the author. |
+| 5 | Technical ambition (tier-gated) | x2 | 3 | 6 | Meets the Tier 1 ceiling of 3. The acquisition of 1,037 Yahoo responses with caching and logged failures, the specified many-to-one join, and a verification suite shown to fail on a mutated copy all work and were rerun from a clean kernel. A 4 is not available at Tier 1, and no stretch component is claimed. |
+| 6 | Repository and reproducibility | x2 | 3 | 6 | The repo is built: pinned requirements, a hash-checked `scripts/get_data.py`, a README with run steps, a recorded nbconvert run, a clean-clone test that matched the original run byte for byte, and a secret scan with no matches. The repo is pushed and merged to `main` at https://github.com/rdholiver-cloud/dsa405-project, and the Yahoo cache zip is shared so anyone with the link can download it. A fresh clone with no data restored all 2,076 cache files through `scripts/get_data.py` without a sign-in. |
+| 7 | Documentation carried forward | x1 | 3 | 3 | `docs/data_dictionary.md` and `docs/cleaning_log.csv` are updated to the final data, with log rows 19 to 24 for P3 and P4 and a note that nothing in the data changed after P3. They are consistent with the final run. Two loose ends keep this from a 4: `data/processed/cleaning_log.csv` is still the older 18-row P2 copy, and the P2 provenance brief is not carried as its own file. |
+|  | **Total** | **13** |  | **43** | Weighted mean 43 / 13 = 3.308. Percentage = 88 + (3.308 - 3) x 12 = 91.69, which rounds to **92**. |
+
+**Sentences for every row scored below 4**
+
+4. AI use log and reflection (2): Another week would fill Section 8 with the complete list of tools used on P2 through P4 and for which tasks, and with one real case of a model error, how it was caught, and what it changed.
+5. Technical ambition (3): Tier 1 caps this row at 3, and no stretch component is claimed.
+6. Repository and reproducibility (3): Another week would commit the processed tables or a smaller sample so a reader of the GitHub page alone can open them without running the notebook.
+7. Documentation carried forward (3): Another week would remove or replace the stale 18-row `data/processed/cleaning_log.csv` so there is one final log, and add the provenance brief as its own file.

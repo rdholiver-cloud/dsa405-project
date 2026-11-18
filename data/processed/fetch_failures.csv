@@ -1,0 +1,7 @@
+ticker,reason
+INDV,INDV: JSON path ['timestamp'] missing at 'timestamp'
+MGPI,MGPI: JSON path ['timestamp'] missing at 'timestamp'
+NATH,NATH: JSON path ['timestamp'] missing at 'timestamp'
+QRVO,QRVO: JSON path ['timestamp'] missing at 'timestamp'
+SLP,SLP: JSON path ['timestamp'] missing at 'timestamp'
+WBD,WBD: JSON path ['timestamp'] missing at 'timestamp'
