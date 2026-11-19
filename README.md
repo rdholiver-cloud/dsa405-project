@@ -21,6 +21,8 @@ The Yahoo responses are stored as a cache zip outside git (see below). P4 never 
 
 ## How to run
 
+In Colab: open the notebook from GitHub and Run all; the first cell clones the repo.
+
 1. Use Python 3.13 (the recorded run used 3.13.5). Python 3.11 or later should work but is untested.
 2. Clone the repo. The submission branch is `main` (the P4 work was built on `p4-synthesis` and merged into `main` through PR #1):
 
