@@ -39,11 +39,11 @@ python -m pip install -r requirements.txt
 4. Get the Yahoo cache. It is approximately 87 MB zipped and 502 MB unzipped, so it is not in git. The zip is `DSA405_P3_yahoo_cache_2026-11-05.zip` (sha256 `656dff59e9feb7d108bfe5fca87a95648e91ca9d6fa27b73df6555c0c9ec5c7f`). Place it in `data/raw/` or pass its path:
 
 ```bash
-python scripts/get_data.py                       # tries the class Google Drive link, then stops with instructions
+python scripts/get_data.py                       # tries the GitHub Release mirror, then the class Google Drive link
 python scripts/get_data.py --zip /path/to/DSA405_P3_yahoo_cache_2026-11-05.zip
 ```
 
-The script checks the Nasdaq file hash, checks the committed manifest (`data/raw/DSA405_P3_yahoo-cache-manifest.json.gz`, 2,076 files with sizes and sha256), checks the zip hash, unzips into `data/raw/yahoo/`, and checks every unzipped file. The Drive file is shared so anyone with the link can download it. If the download fails anyway, the script says so, and you can pass a local copy of the zip with `--zip <path>`. The script never changes Drive sharing and never contacts Yahoo.
+The script checks the Nasdaq file hash, checks the committed manifest (`data/raw/DSA405_P3_yahoo-cache-manifest.json.gz`, 2,076 files with sizes and sha256), checks the zip hash, unzips into `data/raw/yahoo/`, and checks every unzipped file. The zip has two public mirrors, tried in order with the same sha256 check: the GitHub Release asset `p4-yahoo-cache` on this repo, then the class Google Drive file, shared so anyone with the link can download it. If both fail, the script says so, and you can pass a local copy of the zip with `--zip <path>`. The script never changes Drive sharing and never contacts Yahoo.
 
 5. Run the notebook from a clean kernel:
 

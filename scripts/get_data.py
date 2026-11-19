@@ -6,10 +6,10 @@ The Yahoo cache zip is not in git (about 87 MB compressed, 502 MB uncompressed).
 If the zip is already present, or the extracted files already match the
 committed manifest, this script stays offline and only verifies hashes.
 
-If the zip is missing, the script tries the class Google Drive link. As of
-2026-11-17 that file was not publicly shared, so the download is expected to
-fail unless the owner later shares it. Place the zip yourself or pass --zip
-PATH. This script never changes Drive sharing and never contacts Yahoo.
+If the zip is missing, the script tries two mirrors in order, each with the
+same sha256 check: first the GitHub Release asset on this repo, then the class
+Google Drive link. If both fail, place the zip yourself or pass --zip PATH.
+This script never changes Drive sharing and never contacts Yahoo.
 
 Usage (from the repo root):
 
@@ -42,6 +42,15 @@ CACHE_ZIP = RAW / CACHE_ZIP_NAME
 CACHE_ZIP_SHA256 = "656dff59e9feb7d108bfe5fca87a95648e91ca9d6fa27b73df6555c0c9ec5c7f"
 CACHE_DRIVE_ID = "1V8y-qF7jM2aOFJIyZxxBLP0QUMa5VuDN"
 CACHE_DRIVE_URL = f"https://drive.usercontent.google.com/download?id={CACHE_DRIVE_ID}&export=download&confirm=t"
+CACHE_RELEASE_TAG = "p4-yahoo-cache"
+CACHE_GITHUB_URL = (
+    "https://github.com/rdholiver-cloud/dsa405-project/releases/download/"
+    f"{CACHE_RELEASE_TAG}/{CACHE_ZIP_NAME}"
+)
+CACHE_MIRRORS = (
+    ("GitHub Release", CACHE_GITHUB_URL),
+    ("Google Drive", CACHE_DRIVE_URL),
+)
 
 MANIFEST_PATH = RAW / "DSA405_P3_yahoo-cache-manifest.json.gz"
 MANIFEST_SHA256 = "848703115237a4b08bc31fe8e1b71377f04f7149d03192ca3c4adac34af678ef"
@@ -112,40 +121,40 @@ def looks_like_html_login(path: Path) -> bool:
     return head.startswith(b"<!doctype html") or head.startswith(b"<html") or b"service-login" in head or b"accounts.google.com" in head
 
 
-def download_drive_zip(destination: Path) -> bool:
-    """Try the public Drive URL. Return True on a successful hash-checked write."""
-    print("Trying the class Drive link for the Yahoo cache zip.")
-    print(f"  {CACHE_DRIVE_URL}")
+def download_zip(label: str, url: str, destination: Path) -> bool:
+    """Try one mirror URL. Return True on a successful hash-checked write."""
+    print(f"Trying the {label} mirror for the Yahoo cache zip.")
+    print(f"  {url}")
     tmp = destination.with_suffix(destination.suffix + ".download.tmp")
-    request = Request(CACHE_DRIVE_URL, headers={"User-Agent": USER_AGENT})
+    request = Request(url, headers={"User-Agent": USER_AGENT})
     try:
         with urlopen(request, timeout=120) as response:
             content_type = (response.headers.get("Content-Type") or "").lower()
             final_url = response.geturl()
             if "accounts.google.com" in final_url or "service-login" in final_url:
                 print(
-                    "Drive redirected to a sign-in page. The file is not "
+                    f"{label} redirected to a sign-in page. The file is not "
                     "publicly shared."
                 )
                 return False
             if "text/html" in content_type:
                 print(
-                    "Drive returned an HTML page instead of the zip. The file "
-                    "is probably not publicly shared."
+                    f"{label} returned an HTML page instead of the zip. The "
+                    "file is probably not publicly shared."
                 )
                 return False
             with tmp.open("wb") as target:
                 shutil.copyfileobj(response, target)
     except HTTPError as exc:
-        print(f"Drive download failed with HTTP {exc.code}.")
+        print(f"{label} download failed with HTTP {exc.code}.")
         return False
     except URLError as exc:
-        print(f"Drive download failed: {exc.reason}")
+        print(f"{label} download failed: {exc.reason}")
         return False
     if looks_like_html_login(tmp) or tmp.stat().st_size < 1024 * 1024:
         print(
             "Download does not look like the cache zip (HTML or too small). "
-            "The Drive file is not publicly shared, or the link is wrong."
+            f"The {label} file is not public, or the link is wrong."
         )
         tmp.unlink(missing_ok=True)
         return False
@@ -159,21 +168,30 @@ def download_drive_zip(destination: Path) -> bool:
         tmp.unlink(missing_ok=True)
         return False
     tmp.replace(destination)
-    print(f"Downloaded and verified {destination}")
+    print(f"Downloaded and verified {destination} from {label}")
     return True
+
+
+def download_cache_zip(destination: Path) -> bool:
+    """Try each mirror in order until one passes the sha256 check."""
+    for label, url in CACHE_MIRRORS:
+        if download_zip(label, url, destination):
+            return True
+    return False
 
 
 def explain_private_drive() -> str:
     return (
-        "The Yahoo cache zip was not found locally, and the download from\n"
+        "The Yahoo cache zip was not found locally, and neither mirror worked:\n"
+        f"  {CACHE_GITHUB_URL}\n"
         f"  https://drive.google.com/file/d/{CACHE_DRIVE_ID}/view\n"
-        "did not succeed (see the message above: the network may block Google\n"
-        "Drive, or the file may not be shared).\n"
+        "(see the messages above: the network may block a host, or a file may\n"
+        "not be shared).\n"
         f"Place a copy of {CACHE_ZIP_NAME} at:\n"
         f"  {CACHE_ZIP}\n"
         "or re-run with --zip PATH. The expected sha256 is:\n"
         f"  {CACHE_ZIP_SHA256}\n"
-        "You can also open the Drive link above in a browser, download the zip,\n"
+        "You can also open either link above in a browser, download the zip,\n"
         "and pass it with --zip. This script does not change Drive sharing and\n"
         "does not contact Yahoo."
     )
@@ -244,7 +262,7 @@ def ensure_raw_data(zip_path: Path | None = None) -> None:
 
     print(f"{len(missing)} of {len(manifest)} cache files are missing or changed.")
     if not CACHE_ZIP.is_file():
-        if not download_drive_zip(CACHE_ZIP):
+        if not download_cache_zip(CACHE_ZIP):
             raise SystemExit(explain_private_drive())
     else:
         require_hash(CACHE_ZIP, CACHE_ZIP_SHA256, "Yahoo cache zip")
