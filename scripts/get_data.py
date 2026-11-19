@@ -6,10 +6,16 @@ The Yahoo cache zip is not in git (about 87 MB compressed, 502 MB uncompressed).
 If the zip is already present, or the extracted files already match the
 committed manifest, this script stays offline and only verifies hashes.
 
-If the zip is missing, the script tries two mirrors in order, each with the
-same sha256 check: first the GitHub Release asset on this repo, then the class
-Google Drive link. If both fail, place the zip yourself or pass --zip PATH.
-This script never changes Drive sharing and never contacts Yahoo.
+If the zip is missing, the script tries the class Google Drive link and, if
+it has been published, a GitHub Release asset on this repo (tag
+p4-yahoo-cache), each with the same sha256 check. If both fail, place the zip
+yourself or pass --zip PATH. This script never changes Drive sharing and never
+contacts Yahoo.
+
+No download is needed to check the results: scripts/reproduce_offline.py
+rebuilds the headline findings, both bootstraps, the subperiods and two figures
+from tables committed in data/processed/ and compares them to
+results/findings.csv.
 
 Usage (from the repo root):
 
@@ -47,9 +53,11 @@ CACHE_GITHUB_URL = (
     "https://github.com/rdholiver-cloud/dsa405-project/releases/download/"
     f"{CACHE_RELEASE_TAG}/{CACHE_ZIP_NAME}"
 )
+# The Drive file is shared by link. The GitHub Release asset is optional: it is
+# tried only in case it has been published, and a 404 there is expected.
 CACHE_MIRRORS = (
-    ("GitHub Release", CACHE_GITHUB_URL),
     ("Google Drive", CACHE_DRIVE_URL),
+    ("GitHub Release (if published)", CACHE_GITHUB_URL),
 )
 
 MANIFEST_PATH = RAW / "DSA405_P3_yahoo-cache-manifest.json.gz"
@@ -182,9 +190,9 @@ def download_cache_zip(destination: Path) -> bool:
 
 def explain_private_drive() -> str:
     return (
-        "The Yahoo cache zip was not found locally, and neither mirror worked:\n"
-        f"  {CACHE_GITHUB_URL}\n"
+        "The Yahoo cache zip was not found locally, and neither download worked:\n"
         f"  https://drive.google.com/file/d/{CACHE_DRIVE_ID}/view\n"
+        f"  {CACHE_GITHUB_URL} (only if published)\n"
         "(see the messages above: the network may block a host, or a file may\n"
         "not be shared).\n"
         f"Place a copy of {CACHE_ZIP_NAME} at:\n"
@@ -193,7 +201,9 @@ def explain_private_drive() -> str:
         f"  {CACHE_ZIP_SHA256}\n"
         "You can also open either link above in a browser, download the zip,\n"
         "and pass it with --zip. This script does not change Drive sharing and\n"
-        "does not contact Yahoo."
+        "does not contact Yahoo.\n"
+        "To check the findings without the cache, run:\n"
+        "  python scripts/reproduce_offline.py"
     )
 
 

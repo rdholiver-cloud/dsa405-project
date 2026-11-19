@@ -39,11 +39,19 @@ python -m pip install -r requirements.txt
 4. Get the Yahoo cache. It is approximately 87 MB zipped and 502 MB unzipped, so it is not in git. The zip is `DSA405_P3_yahoo_cache_2026-11-05.zip` (sha256 `656dff59e9feb7d108bfe5fca87a95648e91ca9d6fa27b73df6555c0c9ec5c7f`). Place it in `data/raw/` or pass its path:
 
 ```bash
-python scripts/get_data.py                       # tries the GitHub Release mirror, then the class Google Drive link
+python scripts/get_data.py                       # tries the class Google Drive link, then a GitHub Release copy if one is published
 python scripts/get_data.py --zip /path/to/DSA405_P3_yahoo_cache_2026-11-05.zip
 ```
 
-The script checks the Nasdaq file hash, checks the committed manifest (`data/raw/DSA405_P3_yahoo-cache-manifest.json.gz`, 2,076 files with sizes and sha256), checks the zip hash, unzips into `data/raw/yahoo/`, and checks every unzipped file. The zip has two public mirrors, tried in order with the same sha256 check: the GitHub Release asset `p4-yahoo-cache` on this repo, then the class Google Drive file, shared so anyone with the link can download it. If both fail, the script says so, and you can pass a local copy of the zip with `--zip <path>`. The script never changes Drive sharing and never contacts Yahoo.
+The script checks the Nasdaq file hash, checks the committed manifest (`data/raw/DSA405_P3_yahoo-cache-manifest.json.gz`, 2,076 files with sizes and sha256), checks the zip hash, unzips into `data/raw/yahoo/`, and checks every unzipped file. The script downloads the zip from the class Google Drive file, which is shared so anyone with the link can download it. If a GitHub Release copy (tag `p4-yahoo-cache`) has been published on this repo, the script tries that next, with the same sha256 check. If neither works, the script says so, and you can pass a local copy of the zip with `--zip <path>`. The script never changes Drive sharing and never contacts Yahoo.
+
+**Check the findings with no download.** If the cache cannot be restored, this one command still reproduces the results from tables committed in `data/processed/`:
+
+```bash
+python scripts/reproduce_offline.py
+```
+
+It reads `data/processed/backtest_full.csv` (the 356-month headline backtest) and `data/processed/flagged_monthly_returns.csv`, recomputes the headline growth, CAGR, beat share and volatility, both bootstraps with the same seed, the three subperiods and the held-jump check, and compares all 47 values to `results/findings.csv` at the 12 significant digits the file stores. It writes `figures/offline/growth_baseline.png` and `figures/offline/subperiod_cagr.png` and exits with an error if any value differs. The three sensitivity paths and the input counts need the full monthly price panel, so the script reads those 30 rows from `results/findings.csv` and checks only that they agree with each other. Rebuilding those from raw data needs the cache and step 5.
 
 5. Run the notebook from a clean kernel:
 
@@ -62,6 +70,7 @@ The run takes about 30 seconds and writes `figures/`, `results/findings.csv`, an
 | `DSA405_002_FA26_P4_rdhoover.executed.ipynb` | The same notebook after a clean nbconvert run, with outputs |
 | `DSA405_002_FA26_P2_rdhoover.ipynb` | P2 audit and cleaning of the Nasdaq file, kept as the cleaning provenance |
 | `scripts/get_data.py` | Hash-checked data restore (Nasdaq file, Yahoo cache zip, manifest) |
+| `scripts/reproduce_offline.py` | Rebuilds and checks the headline findings and two figures from committed tables, no download |
 | `scripts/fetch_nasdaqtraded.py` | P2 script that downloaded the Nasdaq snapshot. Not needed to reproduce |
 | `data/raw/nasdaqtraded.txt` | Unmodified Nasdaq snapshot |
 | `data/raw/DSA405_P3_yahoo-cache-manifest.json.gz` | Expected size and sha256 of every cached Yahoo file |
