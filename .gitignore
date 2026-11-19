@@ -30,3 +30,6 @@ data/processed/prices_daily.csv
 # Large intermediates rebuilt by the P4 notebook (31 MB and 20 MB).
 data/processed/joined_monthly.csv
 data/processed/prices_monthly.csv
+
+# Figures written by scripts/reproduce_offline.py (the committed figures are in figures/).
+figures/offline/
