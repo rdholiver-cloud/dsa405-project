@@ -165,17 +165,17 @@ def download_drive_zip(destination: Path) -> bool:
 
 def explain_private_drive() -> str:
     return (
-        "The Yahoo cache zip was not found locally, and the class Drive file\n"
+        "The Yahoo cache zip was not found locally, and the download from\n"
         f"  https://drive.google.com/file/d/{CACHE_DRIVE_ID}/view\n"
-        "is not publicly shared, so this script cannot fetch it for you.\n"
+        "did not succeed (see the message above: the network may block Google\n"
+        "Drive, or the file may not be shared).\n"
         f"Place a copy of {CACHE_ZIP_NAME} at:\n"
         f"  {CACHE_ZIP}\n"
         "or re-run with --zip PATH. The expected sha256 is:\n"
         f"  {CACHE_ZIP_SHA256}\n"
-        "The owner of the class Drive folder would need to share that file\n"
-        "with anyone who has the link before a stranger can download it\n"
-        "automatically. This script does not change Drive sharing and does\n"
-        "not contact Yahoo."
+        "You can also open the Drive link above in a browser, download the zip,\n"
+        "and pass it with --zip. This script does not change Drive sharing and\n"
+        "does not contact Yahoo."
     )
 
 

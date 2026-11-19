@@ -22,7 +22,12 @@ The Yahoo responses are stored as a cache zip outside git (see below). P4 never 
 ## How to run
 
 1. Use Python 3.13 (this run used 3.13.5). Python 3.11 or later should work but is untested.
-2. Clone the repo and check out the `p4-synthesis` branch.
+2. Clone the repo. The submission branch is `main` (the P4 work was built on `p4-synthesis` and merged into `main` through PR #1):
+
+```bash
+git clone https://github.com/rdholiver-cloud/dsa405-project.git
+cd dsa405-project
+```
 3. Create an environment and install the pinned packages:
 
 ```bash
@@ -52,6 +57,7 @@ The run takes about 30 seconds and writes `figures/`, `results/findings.csv`, an
 
 | Path | What it is |
 | --- | --- |
+| `DSA405_P4_Report_rdhoover.md` | The P4 written report, all nine sections |
 | `DSA405_002_FA26_P4_rdhoover.ipynb` | Main P4 notebook: raw files to joined table, backtest, sensitivity checks, bootstrap, findings and figures |
 | `DSA405_002_FA26_P4_rdhoover.executed.ipynb` | The same notebook after a clean nbconvert run, with outputs |
 | `DSA405_002_FA26_P2_rdhoover.ipynb` | P2 audit and cleaning of the Nasdaq file, kept as the cleaning provenance |
@@ -60,8 +66,9 @@ The run takes about 30 seconds and writes `figures/`, `results/findings.csv`, an
 | `data/raw/nasdaqtraded.txt` | Unmodified Nasdaq snapshot |
 | `data/raw/DSA405_P3_yahoo-cache-manifest.json.gz` | Expected size and sha256 of every cached Yahoo file |
 | `data/raw/yahoo/` | Restored Yahoo cache. Not in git |
-| `data/processed/` | P2 clean tables and cleaning log, plus P4 outputs: `directory.csv`, `backtest_full.csv`, `flagged_monthly_returns.csv`, `fetch_failures.csv`. The large `prices_daily.csv`, `prices_monthly.csv` and `joined_monthly.csv` are rebuilt by the notebook and not in git |
+| `data/processed/` | P2 clean tables and the P2 notebook's own 18-row `cleaning_log.csv` output (the final log is `docs/cleaning_log.csv`), plus P4 outputs: `directory.csv`, `backtest_full.csv`, `flagged_monthly_returns.csv`, `fetch_failures.csv`. The large `prices_daily.csv`, `prices_monthly.csv` and `joined_monthly.csv` are rebuilt by the notebook and not in git |
 | `docs/data_dictionary.md`, `docs/cleaning_log.csv` | Data dictionary and cleaning log, updated to the final data |
+| `docs/provenance.md` | Provenance brief for both sources, carried forward from P2 and updated for the Yahoo cache |
 | `results/findings.csv` | Every headline number the report cites, with uncertainty figures |
 | `figures/` | `growth_baseline.png`, `growth_sensitivity.png`, `subperiod_cagr.png` |
 | `logs/p4_nbconvert_run.log` | Log of the recorded clean run |
